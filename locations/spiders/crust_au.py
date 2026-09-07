@@ -12,7 +12,6 @@ class CrustAUSpider(Spider):
     name = "crust_au"
     item_attributes = {"brand": "Crust", "brand_wikidata": "Q100792715"}
     allowed_domains = ["www.crust.com.au"]
-    requires_proxy = True
     start_urls = ["https://www.crust.com.au/stores/stores_for_map_markers.json?catering_active=false"]
 
     async def start(self) -> AsyncIterator[JsonRequest]:
