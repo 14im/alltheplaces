@@ -81,13 +81,19 @@ class KingJouetSpider(JSONBlobSpider):
         if any(banner in (store.get("label") or "").upper() for banner in ("DULTES", "OKAZ")):
             return
         # The Papeete store has no code, and its store page (built from the code) is broken.
+        label = (store.get("label") or "").strip()
         item["ref"] = store.get("code") or store["guid"]
         if store.get("code"):
             item["website"] = response.urljoin(f"/magasins/{store['slug']}")
-        # Drop the brand and store-format prefixes; "CITY 2" is a Brussels shopping centre, not the format.
-        item["branch"] = re.sub(
-            r"^(?:KING JOUET |CITY (?!\d)|BOUTIQUE )+", "", (store.get("label") or "").strip(), flags=re.I
-        )
+        # Check if this is a special brand shop (non-King Jouet branded store)
+        special_brands = ["STAR WARS", "GASHAPON", "SYLVANIAN"]
+        if any(brand in label.upper() for brand in special_brands):
+            # For branded shops, use the shop-specific name from the label
+            item["name"] = label
+            item["operator"] = "King Jouet"
+        else:
+            # Drop the brand and store-format prefixes for regular King Jouet stores; "CITY 2" is a Brussels shopping centre, not the format.
+            item["branch"] = re.sub(r"^(?:KING JOUET |CITY (?!\d)|BOUTIQUE )+", "", label, flags=re.I)
         item["country"] = OVERSEAS_POSTCODE_PREFIXES.get(
             (store.get("postalCode") or "")[:3], COUNTRIES[urlparse(response.url).netloc]
         )
