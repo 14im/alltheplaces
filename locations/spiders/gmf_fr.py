@@ -11,6 +11,7 @@ from locations.structured_data_spider import StructuredDataSpider
 
 class GmfFRSpider(SitemapSpider, StructuredDataSpider):
     name = "gmf_fr"
+    allowed_domains = ["gmf.fr"]
     item_attributes = {"brand": "GMF", "brand_wikidata": "Q3095296"}
     # Real agency pages carry a self-contained JSON-LD InsuranceAgency block; the page's own
     # HTML microdata is broken (its "geo" block is never attached to the Organization item).
@@ -19,7 +20,7 @@ class GmfFRSpider(SitemapSpider, StructuredDataSpider):
     sitemap_urls = ["https://www.gmf.fr/accueil.sitemap.xml"]
     # Sitemap also lists ~104 department/region pages ("assurances-<slug>", plural); the
     # trailing "-" here excludes those, matching only the singular "assurance-<slug>".
-    sitemap_rules = [(r"/agences-gmf/assurance-([\w-]+)$", "parse")]
+    sitemap_rules = [(r"^https?://(?:www\.)?gmf\.fr/agences-gmf/assurance-[\w-]+$", "parse")]
     # A handful of matching URLs aren't agency pages at all; see NOT_AN_AGENCY_PAGE_SIZE below.
     #
     # Site is behind DataDome. requires_proxy is not set: it would route every request through
