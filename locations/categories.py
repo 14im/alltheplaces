@@ -62,6 +62,7 @@ class Categories(Enum):
     BUILDING_CHRISTIAN_CHURCH = {"amenity": "place_of_worship", "religion": "christian"}
 
     CLUB_SCOUT = {"club": "scout"}
+    CLUB_SPORT = {"club": "sport"}
 
     CRAFT_BUILDER = {"craft": "builder"}
     CRAFT_CAR_PAINTER = {"craft": "car_painter"}
